@@ -19,6 +19,8 @@ Total time: about 45 minutes. Everything below is on free tiers.
    3. `20261024000003_reference_data.sql`
    4. `20261025000004_event_operations.sql`
 
+   **Option A2 (one paste):** paste `supabase/setup.sql` (all four files bundled) and Run once.
+
    **Option B (CLI):** `npx supabase login` → `npx supabase link --project-ref <ref>` → `npm run db:push`.
 3. **Authentication → Sign In / Providers → Email**: keep enabled. For launch day, turn **off**
    "Confirm email" (the free mailer only sends a few emails an hour). Turn it back on once you add

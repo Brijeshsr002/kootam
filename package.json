@@ -12,7 +12,8 @@
     "test": "vitest run",
     "check": "npm run lint && npm run typecheck && npm run test && npm run build",
     "db:push": "supabase db push",
-    "db:new": "supabase migration new"
+    "db:new": "supabase migration new",
+    "db:bundle": "node scripts/bundle-sql.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",
