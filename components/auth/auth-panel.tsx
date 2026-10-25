@@ -10,6 +10,8 @@ type Mode = "login" | "signup";
 // Phone OTP needs an SMS provider (and DLT registration in India). Until it is
 // set up in Supabase, members sign in with Google or email instead.
 const PHONE_AUTH = process.env.NEXT_PUBLIC_PHONE_AUTH_ENABLED === "true";
+// Google needs an OAuth client configured in Supabase; hidden until then.
+const GOOGLE_AUTH = process.env.NEXT_PUBLIC_GOOGLE_AUTH_ENABLED === "true";
 
 const inputClass = "w-full rounded-lg border border-border px-3 py-2.5 text-base outline-none focus:border-brand";
 const primaryButton =
@@ -47,11 +49,14 @@ export function AuthPanel({ mode, initialAudience, next }: { mode: Mode; initial
         ))}
       </div>
 
-      <GoogleButton mode={mode} audience={audience} next={next} />
-
-      <div className="flex items-center gap-3 text-xs text-muted">
-        <span className="h-px flex-1 bg-border" /> or <span className="h-px flex-1 bg-border" />
-      </div>
+      {GOOGLE_AUTH && (
+        <>
+          <GoogleButton mode={mode} audience={audience} next={next} />
+          <div className="flex items-center gap-3 text-xs text-muted">
+            <span className="h-px flex-1 bg-border" /> or <span className="h-px flex-1 bg-border" />
+          </div>
+        </>
+      )}
 
       {audience === "member" && PHONE_AUTH ? (
         <PhoneOtpForm next={next} />
