@@ -12,11 +12,9 @@ export default async function HostLayout({ children }: LayoutProps<"/host">) {
       title="Host"
       nav={[
         { href: "/host", label: "Dashboard" },
-        { href: "/host/community", label: "Community" },
         { href: "/host/events", label: "Events" },
-        { href: "/host/members", label: "Members" },
         { href: "/host/check-in", label: "Check-in" },
-        { href: "/host/payouts", label: "Payouts" },
+        { href: "/host/community", label: "Community" },
       ]}
     >
       {children}

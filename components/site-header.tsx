@@ -12,11 +12,19 @@ export async function SiteHeader() {
           Koo<span className="text-brand">tam</span>
         </Link>
         <nav className="flex items-center gap-3 text-sm">
+          <Link href="/discover/coimbatore" className="hidden text-muted hover:text-foreground sm:inline">
+            Discover
+          </Link>
           {user ? (
             <>
-              <Link href={homeForRole(user.role)} className="font-medium">
-                Dashboard
+              <Link href="/me" className="font-medium">
+                My tickets
               </Link>
+              {user.role !== "MEMBER" && (
+                <Link href={homeForRole(user.role)} className="font-medium">
+                  {user.role === "ADMIN" ? "Admin" : "Host"}
+                </Link>
+              )}
               <form action="/auth/signout" method="post">
                 <button type="submit" className="text-muted hover:text-foreground">
                   Log out

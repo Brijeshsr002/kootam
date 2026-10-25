@@ -7,6 +7,10 @@ import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 type Audience = "member" | "organizer";
 type Mode = "login" | "signup";
 
+// Phone OTP needs an SMS provider (and DLT registration in India). Until it is
+// set up in Supabase, members sign in with Google or email instead.
+const PHONE_AUTH = process.env.NEXT_PUBLIC_PHONE_AUTH_ENABLED === "true";
+
 const inputClass = "w-full rounded-lg border border-border px-3 py-2.5 text-base outline-none focus:border-brand";
 const primaryButton =
   "w-full rounded-lg bg-brand px-4 py-2.5 font-medium text-brand-foreground disabled:cursor-not-allowed disabled:opacity-60";
@@ -20,7 +24,10 @@ export function AuthPanel({ mode, initialAudience, next }: { mode: Mode; initial
         <h1 className="text-2xl font-bold">{mode === "login" ? "Log in" : "Create your account"}</h1>
         <p className="text-sm text-muted">
           {mode === "login" ? "New here? " : "Already have an account? "}
-          <Link href={mode === "login" ? "/signup" : "/login"} className="font-medium text-brand">
+          <Link
+            href={`${mode === "login" ? "/signup" : "/login"}${next ? `?next=${encodeURIComponent(next)}` : ""}`}
+            className="font-medium text-brand"
+          >
             {mode === "login" ? "Sign up" : "Log in"}
           </Link>
         </p>
@@ -46,7 +53,11 @@ export function AuthPanel({ mode, initialAudience, next }: { mode: Mode; initial
         <span className="h-px flex-1 bg-border" /> or <span className="h-px flex-1 bg-border" />
       </div>
 
-      {audience === "member" ? <PhoneOtpForm next={next} /> : <EmailPasswordForm mode={mode} next={next} />}
+      {audience === "member" && PHONE_AUTH ? (
+        <PhoneOtpForm next={next} />
+      ) : (
+        <EmailPasswordForm mode={mode} audience={audience} next={next} />
+      )}
     </div>
   );
 }
@@ -170,7 +181,8 @@ function PhoneOtpForm({ next }: { next?: string }) {
   );
 }
 
-function EmailPasswordForm({ mode, next }: { mode: Mode; next?: string }) {
+function EmailPasswordForm({ mode, audience, next }: { mode: Mode; audience: Audience; next?: string }) {
+  const home = audience === "organizer" ? "/host" : "/me";
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -189,14 +201,14 @@ function EmailPasswordForm({ mode, next }: { mode: Mode; next?: string }) {
         email,
         password,
         options: {
-          data: { requested_role: "ORGANIZER", full_name: name },
-          emailRedirectTo: `${window.location.origin}/auth/callback?next=/host`,
+          data: { requested_role: audience === "organizer" ? "ORGANIZER" : "MEMBER", full_name: name },
+          emailRedirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(next ?? home)}`,
         },
       });
       setBusy(false);
       if (error) return setError(error.message);
       if (!data.session) return setCheckEmail(true);
-      return window.location.assign(continueUrl(next ?? "/host"));
+      return window.location.assign(continueUrl(next ?? home));
     }
 
     const { error } = await supabase.auth.signInWithPassword({ email, password });
@@ -210,7 +222,7 @@ function EmailPasswordForm({ mode, next }: { mode: Mode; next?: string }) {
   if (checkEmail) {
     return (
       <p className="rounded-lg bg-surface p-4 text-sm">
-        We sent a confirmation link to <strong>{email}</strong>. Open it to activate your organiser account.
+        We sent a confirmation link to <strong>{email}</strong>. Open it to activate your account.
       </p>
     );
   }
@@ -248,7 +260,7 @@ function EmailPasswordForm({ mode, next }: { mode: Mode; next?: string }) {
       </label>
       {error && <p className="text-sm text-red-600">{error}</p>}
       <button disabled={busy} className={primaryButton}>
-        {busy ? "Please wait…" : mode === "signup" ? "Create organiser account" : "Log in"}
+        {busy ? "Please wait…" : mode === "signup" ? (audience === "organizer" ? "Create organiser account" : "Create account") : "Log in"}
       </button>
     </form>
   );

@@ -12,8 +12,8 @@ export default async function MeLayout({ children }: LayoutProps<"/me">) {
       title="My account"
       nav={[
         { href: "/me", label: "Tickets" },
-        { href: "/me/communities", label: "My communities" },
         { href: "/me/history", label: "History" },
+        { href: "/me/communities", label: "Communities" },
         { href: "/me/profile", label: "Profile" },
       ]}
     >

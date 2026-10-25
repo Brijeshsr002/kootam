@@ -38,14 +38,16 @@ npm run db:push
 
 ## Docs
 
+**Going live: [docs/LAUNCH-TODAY.md](docs/LAUNCH-TODAY.md)**
+
 [Master spec](docs/MASTER-SPEC.md) · [Database](docs/DATABASE.md) · [Environment](docs/ENVIRONMENT.md) · [Deployment](docs/DEPLOYMENT.md) · [Daily operations](docs/DAILY-OPERATIONS.md)
 
 ## Build status
 
 - [x] Phase 1 — schema, RLS, auth & roles, tests, docs
-- [ ] Phase 2 — communities & events, public pages, WhatsApp share
-- [ ] Phase 3 — free RSVP, waitlist, my tickets + QR
-- [ ] Phase 4 — Razorpay payments, seat holds, deposits & refunds
-- [ ] Phase 5 — guest list, QR check-in, co-hosts, payouts
-- [ ] Phase 6 — reminders (n8n), city discovery, organiser analytics, SEO
-- [ ] Phase 7 — security review, load test, production deploy
+- [x] Phase 2 — communities & events, public pages, WhatsApp share
+- [x] Phase 3 — free RSVP, waitlist with auto-promotion, my tickets + QR
+- [ ] Phase 4 — Razorpay payments, seat holds, deposits & refunds (needs Razorpay KYC + keys)
+- [~] Phase 5 — done: guest list, QR check-in, complete event, admin payouts/suspend · todo: co-hosts UI, payout onboarding
+- [~] Phase 6 — done: city discovery, SEO (metadata, OG images, JSON-LD, sitemap, robots) · todo: WhatsApp reminders, analytics
+- [ ] Phase 7 — security review, load test, production deploy ([launch guide](docs/LAUNCH-TODAY.md))
